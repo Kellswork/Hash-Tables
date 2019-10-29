@@ -55,14 +55,22 @@ class HashTable:
         # run hash function with key
         # save the value that is returned by the hash in the storage
         # check if the key is already available before hashing
+        #
+        index = self._hash_mod(key)
 
-        if self.count == self.capacity:
-            print('storage is full')
+        if self.storage[index] == None:
+            self.storage[index] = LinkedPair(key, value)
+        else:
+            old_key = self.storage[index]
+            while old_key and old_key.key != key:
+                prev, old_key = old_key, old_key.next
 
-        new_pair = dict()
-        new_pair[key] = value
-        self.storage[self.count] = new_pair
-        self.count + 1
+            if old_key:
+                old_key.value = value
+
+            else:
+                prev.next = LinkedPair(key, value)
+
 
     def remove(self, key):
         '''
@@ -90,7 +98,14 @@ class HashTable:
         # to get value, we run the hash function on the key to get the address in the array
         # retrieve the value using the index returned by the hash function
 
-        pass
+        hashed_key = self._hash_mod(key)
+
+        if self.storage[hashed_key]:
+            old_key = self.storage[hashed_key]
+            while old_key.key != key:
+                old_key = old_key.next
+            return old_key.value
+        return None
 
     def resize(self):
         '''
