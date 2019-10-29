@@ -7,15 +7,17 @@ class LinkedPair:
         self.value = value
         self.next = None
 
+
 class HashTable:
     '''
     A hash table that with `capacity` buckets
     that accepts string keys
     '''
+
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
-
+        self.count = 0
 
     def _hash(self, key):
         '''
@@ -25,7 +27,6 @@ class HashTable:
         '''
         return hash(key)
 
-
     def _hash_djb2(self, key):
         '''
         Hash an arbitrary key using DJB2 hash
@@ -34,14 +35,12 @@ class HashTable:
         '''
         pass
 
-
     def _hash_mod(self, key):
         '''
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
         return self._hash(key) % self.capacity
-
 
     def insert(self, key, value):
         '''
@@ -51,8 +50,26 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # takes a key and value
+        # save the value in the array
+        # run hash function with key
+        # save the value that is returned by the hash in the storage
+        # check if the key is already available before hashing
+        #
+        index = self._hash_mod(key)
 
+        if self.storage[index] == None:
+            self.storage[index] = LinkedPair(key, value)
+        else:
+            old_key = self.storage[index]
+            while old_key and old_key.key != key:
+                prev, old_key = old_key, old_key.next
+
+            if old_key:
+                old_key.value = value
+
+            else:
+                prev.next = LinkedPair(key, value)
 
 
     def remove(self, key):
@@ -63,8 +80,11 @@ class HashTable:
 
         Fill this in.
         '''
+        # set the value at the index to null
+        # hash key to get the index
+        # lookup index on storage
+        # set it to null
         pass
-
 
     def retrieve(self, key):
         '''
@@ -74,8 +94,18 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # retrieve value for the array
+        # to get value, we run the hash function on the key to get the address in the array
+        # retrieve the value using the index returned by the hash function
 
+        hashed_key = self._hash_mod(key)
+
+        if self.storage[hashed_key]:
+            old_key = self.storage[hashed_key]
+            while old_key.key != key:
+                old_key = old_key.next
+            return old_key.value
+        return None
 
     def resize(self):
         '''
@@ -85,7 +115,6 @@ class HashTable:
         Fill this in.
         '''
         pass
-
 
 
 if __name__ == "__main__":
