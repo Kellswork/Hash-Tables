@@ -84,7 +84,22 @@ class HashTable:
         # hash key to get the index
         # lookup index on storage
         # set it to null
-        pass
+        hashed_key = self._hash_mod(key)
+
+        old_key = self.storage[hashed_key]
+        prev_node = old_key
+        if (old_key is not None):
+            if (old_key.key == key):
+                self.storage[hashed_key] = old_key.next
+                return
+            while old_key and old_key.key != key:
+                prev_node = old_key
+                old_key = old_key.next
+
+            if old_key:
+                prev_node.next = old_key.next
+        else:
+            print('could not find key')
 
     def retrieve(self, key):
         '''
@@ -114,7 +129,13 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        new_storage = [None] * (self.capacity * 2)
+
+        for i in range(len(self.storage)):
+            new_storage[i] = self.storage[i]
+
+        self.storage = new_storage
+
 
 
 if __name__ == "__main__":
